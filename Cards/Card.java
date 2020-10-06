@@ -1,31 +1,12 @@
 package Cards;
 
+import java.util.Random;
+
 import Engine.Player;
 import Utils.Targeteable;
 
-enum Rarity {
-    COMMON,
-    MEDIUM,
-    RARE
-}
-
-public abstract class Card {
-    public Rarity rarity;
-    public Utils.Targeteable target;
-
-    public abstract void effect(Player player);
-
-    public void setRarity(Rarity rarity) {
-        this.rarity = rarity;
-    }
-
-    public void setTarget(Targeteable target) {
-        this.target = target;
-    }
-}
-
 /**
- * Card
+ * 	   Card
  *     attr: rarity (70 / 20 / 10)
  *     target: { wall, castle, soldier, card }
  *     effect:
@@ -53,3 +34,49 @@ public abstract class Card {
  *         Turn:
  *             +1 Turno
  */
+
+enum Rarity {
+    COMMON,
+    MEDIUM,
+    RARE
+}
+
+public abstract class Card {
+    public Rarity rarity;
+  //  public Utils.Targeteable target;
+ 
+    public abstract void effect(Player player);
+    
+    public Rarity generateRarity() {
+      Random rand = new Random();
+      Rarity r;
+      int i = rand.nextInt(100);
+      if(i < 70)
+        r = Rarity.COMMON;
+      else if(i>90)
+        r = Rarity.RARE;
+      else
+        r = Rarity.MEDIUM;
+      return r;
+    }
+
+    public void setRarity(Rarity rarity) {
+        this.rarity = rarity;
+    }
+
+    @Override
+    public String toString() {
+      return "Card [rarity=" + rarity + "]";
+    }
+
+
+ /*   public void setTarget(Targeteable target) {
+        this.target = target;
+    }
+
+*/
+
+
+    
+}
+
