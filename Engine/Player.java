@@ -1,9 +1,10 @@
 package Engine;
 
+
 import Cards.*;
+import Utils.Rarity;
 
 import java.util.ArrayList;
-
 /**
  *     target: { wall, castle, soldier, card }
  *     Player
@@ -13,13 +14,13 @@ import java.util.ArrayList;
  *     attr: wall (30)
  *
  *
- *             Attack:
+ *         Attack:
  *             Usa | soldiers |
  *             target: { wall || castle }
  *         Heal Castle: { 10 / 20 / 30 }
  *         Heal Wall: { 5 , 10 , 15 }
  *         Pierce Wall:
- *             NO usa | soldiers | (DaÃ±o directo)
+ *             NO usa | soldiers | (Daño directo)
  *             target: wall
  *             damage: { 5, 10, 30 }
  *         Drop Card
@@ -39,134 +40,140 @@ import java.util.ArrayList;
  */
 
 public class Player {
+  
+  private static final int maxWallHP = 30;
+  private static final int maxCastleHP = 100;
+  
   private String name;
-  private int castle;
-  private int wall;
+  private int castleHP;
+  private int wallHP;
+  
+  private boolean hasLost = false;
+  
   private ArrayList<Card> cards;
-  private ArrayList<Soldier> soldiers;
-  private ArrayList<Card_Soldier> soldierCards;
+  private ArrayList<Card_Soldier> soldiers;
 
-  public Player (String name, ArrayList<Card> cards) {
+  public Player (String name) {
     this.name = name;
-    this.castle = 100;
-    this.wall = 0;
-    this.cards = cards;
-this.soldiers = new ArrayList<Soldier>();
-this.soldierCards = new ArrayList<Card_Soldier>();
+    this.castleHP = maxCastleHP;
+    this.wallHP = maxWallHP;
+    this.cards = new ArrayList<Card>();
+    this.soldiers = new ArrayList<Card_Soldier>();
   }
 
   // Card Effects
-  public Card getCard (int position) {
+  
+  public void pickCard() {
+    cards.add(Game.getInstance().getDeck().getTopCard());
+  }
+
+  public Card takeCard (int position) {
     return this.cards.remove(position);
   }
-
-  @Override
-  public String toString() {
-    return "Player [name=" + name + ", castle=" + castle + ", wall=" + wall + ", cards=" + cards + ", soldiers="
-        + soldiers + "]";
-  }
-
-  public void removeSolder() {
-    this.soldiers.remove(this.soldiers.size());
-  }
-
-  public void addSoldier() {
-    this.soldiers.add(new Soldier());
-  }
-
-  public Card ExchangeCard(Card card) {
+  
+  public Card exchangeRndCard(Card card) {
     int randomIndex = (int) (Math.random() * this.cards.size());
-    Card exchangedCard = this.getCard(randomIndex);
+    Card exchangedCard = this.takeCard(randomIndex);
     this.cards.add(card);
     return exchangedCard;
   }
+  
+  public void discardCard(Card card) {
+    Game.getInstance().getDeck().addCard(card);
+  }
 
+  public void addSoldier(Card_Soldier cs) {
+    this.soldiers.add((Card_Soldier) takeCard(cards.indexOf(cs)));
+  }
+  
+  public void removeSoldier(int position) {
+    discardCard(this.soldiers.remove(position));
+  }
+
+  
+  public int calculateDamage() {
+    int damage = 0;
+    for(Card_Soldier cs : soldiers) {
+      Rarity soldRar = cs.getRarity();
+      switch(soldRar) {
+      
+        case COMMON:
+          damage = damage + 10;
+          break;
+          
+        case MEDIUM:
+          damage = damage + 25;
+          break;
+          
+        case RARE:
+          damage = damage + 70;
+          break;
+      }
+    }
+    return damage;
+  }
+
+  public void takeDamage(int damage, boolean wallOnly) {
+    System.out.println("damage = "+ damage);
+    System.out.println("initial castleHP = "+ castleHP);
+    System.out.println("initial wallHP = "+ wallHP);
+
+    int resultingDamage = 0;
+    if(wallHP < damage)
+      resultingDamage = damage - wallHP;
+    
+    setWallHP(wallHP - damage);
+    if(!wallOnly && wallHP < damage) 
+      setCastleHP(castleHP - resultingDamage);
+    
+    System.out.println("final castleHP = "+ castleHP);
+    System.out.println("final wallHP = "+ wallHP);
+  }
+
+  public void restoreWallHP(int restoredHP) {
+    setWallHP(wallHP + restoredHP);
+  }
+  
+  public void restoreCastleHP(int restoredHP) {
+    setCastleHP(castleHP + restoredHP);}
+  
   // g & s
   
-
-
-  /**
-   * @return the name
-   */
+  private void setCastleHP(int castle) {
+    this.castleHP = castle;
+    if(castleHP <= 0) {
+      castleHP = 0;
+      hasLost = true;
+      }
+    if(castleHP > maxCastleHP)
+      castleHP = maxCastleHP;
+  }
+  
+  private void setWallHP(int wall) {
+    this.wallHP = wall;
+    if(wallHP < 0)
+      wallHP = 0;
+    if(wallHP > maxWallHP)
+      castleHP = maxWallHP;
+  }
+  
   public String getName() {
     return name;
   }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
+  public int getCastleHP() {
+    return castleHP;
   }
-
-  /**
-   * @return the castle
-   */
-  public int getCastle() {
-    return castle;
+  public int getWallHP() {
+    return wallHP;
   }
-
-  /**
-   * @param castle the castle to set
-   */
-  public void setCastle(int castle) {
-    this.castle = castle;
+  public boolean hasLost() {
+    return hasLost;
   }
-
-  /**
-   * @return the wall
-   */
-  public int getWall() {
-    return wall;
-  }
-
-  /**
-   * @param wall the wall to set
-   */
-  public void setWall(int wall) {
-    this.wall = wall;
-  }
-
-  /**
-   * @return the cards
-   */
   public ArrayList<Card> getCards() {
     return cards;
   }
-
-  /**
-   * @param cards the cards to set
-   */
-  public void setCards(ArrayList<Card> cards) {
-    this.cards = cards;
-  }
-
-  /**
-   * @return the soldiers
-   */
-  public ArrayList<Soldier> getSoldiers() {
+  public ArrayList<Card_Soldier> getSoldiers() {
     return soldiers;
   }
-
-  /**
-   * @param soldiers the soldiers to set
-   */
-  public void setSoldiers(ArrayList<Soldier> soldiers) {
-    this.soldiers = soldiers;
-  }
-
-  /**
-   * @return the soldierCards
-   */
-  public ArrayList<Card_Soldier> getSoldierCards() {
-    return soldierCards;
-  }
-
-  /**
-   * @param soldierCards the soldierCards to set
-   */
-  public void setSoldierCards(ArrayList<Card_Soldier> soldierCards) {
-    this.soldierCards = soldierCards;
-  }
-
+ 
 }

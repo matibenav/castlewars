@@ -1,16 +1,36 @@
 package Cards;
 
-import castlewars.CW_Card;
-import castlewars.CW_CardTypes;
+import Engine.Game;
+import Engine.Player;
+import Utils.Rarity;
 
-public class Card_PierceWall 
-extends Card
+public class Card_PierceWall extends Card
 {
-		{
-		}
-
-    @Override
-    public String toString() {
-      return "Card_PierceWall [rarity=" + rarity + "]";
+  @Override
+  public void effect() {
+    Rarity healRar = this.getRarity();
+    int damage = 0;
+    switch(healRar) {
+      case COMMON:
+        damage = 10;
+        break;
+      case MEDIUM:
+        damage = 20;
+        break;
+      case RARE:
+        damage = 30;
+        break;
     }
+    Player target =  Game.getInstance().getGraphics().getTargetPlayer();
+ // takeDamage(int damage, boolean wallOnly)
+    if(target != null) {
+    target.takeDamage(damage, true);
+    Game.getInstance().nextPlayer();
+    }
+  }
+  
+  @Override
+  public String toString() {
+    return "Pierce Wall Card " + this.getRarity();
+  }
 }

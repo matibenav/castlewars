@@ -1,6 +1,7 @@
 package Engine;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -8,61 +9,47 @@ import java.util.UUID;
 import Utils.*;
 import UtilsGraphics.*;
 import Cards.*;
-import Engine.*;
-import GUI_Windows.*;
-import Cards.*;
 
 public class Game { 
   private String id;
   private CircularList <Player> players;
   private Deck deck;
-//private Turn turn;
+//private ArrayList <Turn>  turnHistory;
   private static Game gameInstance;
   private Graphicable graphics;
   private Settings settings;
-
   private Player currentlyPlaying;
   
   private static int amount_players = 2;
-
   private static int starting_Cards = 7;
   private static int amount_cards_attack = 15;
   private static int amount_cards_heal_castle = 15;
   private static int amount_cards_heal_wall = 15;
   private static int amount_cards_pierce_wall = 15;
-  private static int amount_cards_drop_card = 15;
+  private static int amount_cards_drop_cards = 15;
   private static int amount_cards_steal_card = 15;
   private static int amount_cards_exchange_card = 15;
   private static int amount_cards_kill_soldier = 15;
   private static int amount_cards_extra_card = 15;
   private static int amount_cards_soldier = 15;
 
-  @SuppressWarnings("serial")
-  //deberia serializar
-  public class CircularList <E> extends ArrayList<E> {
-    @Override
-    public E get(int index) {
-      return super.get(index % size());
-    }
-  }
- 
   
   public static void main(String[] args)  {
-    Game g = new Game();
+    Game g = Game.getInstance();
+    g.showIntro();
   }
 
   
   private Game() {
-    String id = UUID.randomUUID().toString();
+    id = UUID.randomUUID().toString();
+    this.graphics = new Graphics_GUI();
     gameInstance = this;
-	  this.graphics = new Graphics_GUI();
-	  graphics.showIntro();
   }
-
+  
   public static Game getInstance() {
-    if (gameInstance == null)
-    	gameInstance = new Game();
-      return gameInstance;
+    if(gameInstance == null) 
+      gameInstance = new Game();
+    return gameInstance;
     }
 
   public void switchGraphicable() {
@@ -70,115 +57,82 @@ public class Game {
       this.graphics = new Graphics_Console();
     else
       this.graphics = new Graphics_GUI();
-//    System.out.println("Cambio de interfaz gráfica");
     graphics.showIntro();
   }
  
+  public void setupGame(ArrayList<String> playerNames){
+    players = new CircularList<Player>();
+    for (String name : playerNames) 
+      players.add(new Player(name));
+  // mezclo el orden de los jugadores
+    Collections.shuffle(players);
+    currentlyPlaying = players.get(0);
+    
+    deck = new Deck();
+  // mezclo el mazo y reparto
+    deck.shuffle();
+    deck.dealCards();    
+    
+    showGame();
+  }
 
+  public boolean currentlyPlayingWon() {
+    boolean allElseLost = true;
+    for (Player p : players) {
+      if(p != currentlyPlaying && !p.hasLost()) 
+          allElseLost = false;
+    }
+    return allElseLost;
+  }
+  
+  public void nextPlayer() {
+    int currentPlayerIndex = players.indexOf(currentlyPlaying);
+    currentlyPlaying = players.get(currentPlayerIndex + 1);
+    if(currentlyPlayingWon())
+      showGameOver();
+    if(currentlyPlaying.hasLost())
+      nextPlayer();
+    showGame();
+    }
+ 
+  public static boolean checkDuplicatePlayers(ArrayList<String> playerNames) {
+    Set<String> tempSet = new HashSet<String>();
+    for (String str : playerNames) {
+        if (!tempSet.add(str)) 
+            return true;
+    }
+    return false;
+  }
+
+  public void showGameOver() {
+    System.out.println(currentlyPlaying.getName() + " has won! ");
+  }
+  
+  
   public void showIntro() {
     graphics.showIntro();
+  }
+
+  public void showSettings() {
+    graphics.showSettings();
   }
 
   public void showGame() {
     graphics.showGame();
   } 
 
-  public void showSettings() {
-    graphics.showSettings();
-  }
-
   public void loadGame() {
     System.out.println("TO DO: crear menu para buscar DB y leer datos guardados");
     graphics.loadGame();
   }
-
   
-  public void playCastleWars() {
-    
-    /*
-    boolean gameOver = false;
-    int turnCount = 0;
-    graphics.showGame();
-    while(!gameOver) {
-      System.out.println("Turn n°" + turnCount +" - it's " +players.get(turnCount).getName()+ "'s turn");
-      turnCount ++;
-      //refresh UI enabled/disabled
-      if (turnCount== 20)
-        gameOver = true;
-    }*/
+  public void saveGame() {
+    System.out.println("TO DO: crear menu para crear DB y gaurdar datos de juego");
+    graphics.saveGame();
   }
   
-  public void createGameObjects(ArrayList<String> playerNames){
-
-    deck = new Deck();
-    deck.shuffle();
-    players = new CircularList<Player> ();
-    
-    for (String s : playerNames) {
-      
-      ArrayList<Card> playerDeck = new ArrayList<Card>();
-      
-      for(int i = 0; i<starting_Cards;i++) {
-        playerDeck.add(deck.getCards().get(0));
-        deck.getCards().remove(0);
-      }
-      
-      players.add(new Player(s, playerDeck));
-    }
-    playCastleWars();
-  }
-
+  // setters
   
-  public static ArrayList<String> trimSpaces(ArrayList<String> names){
-    for(String s : names)
-      s.replaceAll("\\s+$", "");
-    return names;
-  }
-
-  public static boolean checkDuplicatePlayers(ArrayList<String> playerNames) {
-    Set<String> tempSet = new HashSet<String>();
-    for (String str : playerNames) {
-        if (!tempSet.add(str)) {
-            return true;
-        }
-    }
-    return false;
-  }
- 
-  // g & s
-  
-  public Settings getSettings() {
-    return settings;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public void setPlayers(CircularList<Player> players) {
-    this.players = players;
-  }
-
-  public static void setGameInstance(Game gameInstance) {
-    Game.gameInstance = gameInstance;
-  }
-
-  public void setDeck(Deck deck) {
-    this.deck = deck;
-  }
-
-  public void setGraphics(Graphicable graphics) {
-    this.graphics = graphics;
-  }
-
-  public void setSettings(Settings settings) {
-    this.settings = settings;
-  }
-  
-  public void setCurrentlyPlaying(Player currentlyPlaying) {
-    this.currentlyPlaying = currentlyPlaying;
-  }
-
   public static boolean setAmount_players(int amount_players) {
     if(amount_players <= Settings.PLAYERS.getMax() &&
        amount_players >= Settings.PLAYERS.getMin()) {
@@ -239,10 +193,10 @@ public class Game {
          return false;
   }
 
-  public static boolean setAmount_cards_drop_card(int amount_cards_drop_card) {
+  public static boolean setAmount_cards_drop_cards(int amount_cards_drop_card) {
     if(amount_cards_drop_card <= Settings.CARDS.getMax() &&
         amount_cards_drop_card >= Settings.CARDS.getMin()) {
-      Game.amount_cards_drop_card = amount_cards_drop_card;
+      Game.amount_cards_drop_cards = amount_cards_drop_card;
          return true;
        }
        else
@@ -291,7 +245,7 @@ public class Game {
 
   public static boolean setAmount_cards_soldier(int amount_cards_soldier) {    
     if(amount_cards_soldier <= Settings.CARDS.getMax() &&
-        amount_cards_soldier >= Settings.CARDS.getMin()) {
+       amount_cards_soldier >= Settings.CARDS.getMin()) {
       Game.amount_cards_soldier = amount_cards_soldier;
         return true;
       }
@@ -299,7 +253,15 @@ public class Game {
         return false;
   }
 
-
+  // getters
+  
+  public Settings getSettings() {
+    return settings;
+  }
+  
+  public Graphicable getGraphics() {
+    return graphics;
+  }
   
   public Player getCurrentlyPlaying() {
     return currentlyPlaying;
@@ -309,10 +271,17 @@ public class Game {
     return id;
   }
 
-  public CircularList<Player> getPlayers() {
+  public ArrayList<Player> getPlayers() {
     return players;
   }
 
+  public Player findPlayer(String name) {
+    for(Player p : players)
+      if (p.getName().equals(name))
+      return p;
+    return null;
+  }
+  
   public Deck getDeck() {
     return deck;
   }
@@ -320,11 +289,7 @@ public class Game {
   public static Game getGameInstance() {
     return gameInstance;
   }
-
-  public Graphicable getGraphics() {
-    return graphics;
-  }
- 
+  
   public static int getAmount_players() {
     return amount_players;
   }
@@ -349,8 +314,8 @@ public class Game {
     return amount_cards_pierce_wall;
   }
 
-  public static int getAmount_cards_drop_card() {
-    return amount_cards_drop_card;
+  public static int getAmount_cards_drop_cards() {
+    return amount_cards_drop_cards;
   }
 
   public static int getAmount_cards_steal_card() {

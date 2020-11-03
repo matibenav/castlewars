@@ -1,15 +1,23 @@
 package Cards;
 
-public 
-class Card_Kill_Soldier 
-extends Card
+import Engine.Game;
+import Engine.Player;
+
+public class Card_Kill_Soldier extends Card
 {
-	public Card_Kill_Soldier() 
-		{
-		}
+  public void effect() {
+    Player target =  Game.getInstance().getGraphics().getTargetPlayer();
+    if(target != null && target.getSoldiers().size() > 0) {
+      Card card = Game.getInstance().getGraphics().getTargetSoldier(target);
+      target.removeSoldier(target.getSoldiers().indexOf(card));
+      Game.getInstance().nextPlayer();
+      }
+    else if(target.getSoldiers().size() == 0)
+      Game.getInstance().getGraphics().showDialog("Selected player does not have any soldiers");
+    }
 
   @Override
   public String toString() {
-    return "Card_Kill_Soldier [rarity=" + rarity + "]";
+    return "Kill Soldier Card";
   }
 }

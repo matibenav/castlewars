@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +22,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import Engine.Game;
+import Engine.Settings;
 
 @SuppressWarnings("serial")
 public class GUI_SettingsWin extends GUI_Frame {
   
   public GUI_SettingsWin () {
-    super(545,620);
+    super(620,620);
     
     JPanel descriptions_jp = new JPanel();
     JPanel amounts_jp = new JPanel();
@@ -68,18 +71,30 @@ public class GUI_SettingsWin extends GUI_Frame {
     more_jp.setLayout(new GridLayout(12,1));
     less_jp.setLayout(new GridLayout(12,1));
 
-    JLabel players_jl = new JLabel("Players");   
-    JLabel starting_cards_jl = new JLabel("Starting Cards");   
-    JLabel cards_attack_jl = new JLabel("Attack");   
-    JLabel cards_heal_castle_jl = new JLabel("Heal Castle");
-    JLabel cards_heal_wall_jl = new JLabel("Heal Wall");   
-    JLabel cards_pierce_wall_jl = new JLabel("Pierce Wall");   
-    JLabel cards_drop_card_jl = new JLabel("Drop Card");
-    JLabel cards_steal_card_jl = new JLabel("Steal Card");   
-    JLabel cards_exchange_card_jl = new JLabel("Exchange Card");
-    JLabel cards_extra_card_jl = new JLabel("Extra Card");
-    JLabel cards_soldier_jl = new JLabel("Soldier");
-    JLabel cards_kill_soldier_jl = new JLabel("Kill Soldier");
+    JLabel players_jl = new JLabel("  Players");   
+    players_jl.setToolTipText(Settings.PLAYERS.getDescription());
+    JLabel starting_cards_jl = new JLabel("  Starting Cards");   
+    starting_cards_jl.setToolTipText(Settings.STARTING_CARDS.getDescription());
+    JLabel cards_attack_jl = new JLabel("  # Cards - Attack");   
+    cards_attack_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_heal_castle_jl = new JLabel("  # Cards - Heal Castle");
+    cards_heal_castle_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_heal_wall_jl = new JLabel("  # Cards - Heal Wall");   
+    cards_heal_wall_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_pierce_wall_jl = new JLabel("  # Cards - Pierce Wall");   
+    cards_pierce_wall_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_drop_card_jl = new JLabel("  # Cards - Drop Card");
+    cards_drop_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_steal_card_jl = new JLabel("  # Cards - Steal Card");   
+    players_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_exchange_card_jl = new JLabel("  # Cards - Exchange Card");
+    cards_exchange_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_extra_card_jl = new JLabel("  # Cards - Extra Card");
+    cards_extra_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_soldier_jl = new JLabel("  # Cards - Soldier");
+    cards_soldier_jl.setToolTipText(Settings.CARDS.getDescription());
+    JLabel cards_kill_soldier_jl = new JLabel("  # Cards - Kill Soldier");
+    cards_kill_soldier_jl.setToolTipText(Settings.CARDS.getDescription());
     
     JLabel amount_players_jl = new JLabel("  " + Game.getAmount_players() + "  " , JLabel.CENTER);   
     JLabel amount_starting_cards_jl = new JLabel("  " + Game.getStarting_Cards() + "  " , JLabel.CENTER);   
@@ -87,7 +102,7 @@ public class GUI_SettingsWin extends GUI_Frame {
     JLabel amount_cards_heal_castle_jl = new JLabel("  " + Game.getAmount_cards_heal_castle() + "  " , JLabel.CENTER);  
     JLabel amount_cards_heal_wall_jl = new JLabel("  " + Game.getAmount_cards_heal_wall() + "  " , JLabel.CENTER);  
     JLabel amount_cards_pierce_wall_jl = new JLabel("  " + Game.getAmount_cards_pierce_wall() + "  " , JLabel.CENTER);  
-    JLabel amount_cards_drop_card_jl = new JLabel("  " + Game.getAmount_cards_drop_card() + "  " , JLabel.CENTER); 
+    JLabel amount_cards_drop_card_jl = new JLabel("  " + Game.getAmount_cards_drop_cards() + "  " , JLabel.CENTER); 
     JLabel amount_cards_steal_card_jl = new JLabel("  " + Game.getAmount_cards_steal_card() + "  " , JLabel.CENTER); 
     JLabel amount_cards_exchange_card_jl = new JLabel("  " + Game.getAmount_cards_exchange_card() + "  " , JLabel.CENTER); 
     JLabel amount_cards_extra_card_jl = new JLabel("  " + Game.getAmount_cards_extra_card() + "  " , JLabel.CENTER); 
@@ -178,6 +193,7 @@ public class GUI_SettingsWin extends GUI_Frame {
     @Override
     public void actionPerformed(ActionEvent arg0) 
       {
+      dispose();
       setPlayerNames();
       }
     });
@@ -270,10 +286,10 @@ public class GUI_SettingsWin extends GUI_Frame {
     @Override
     public void actionPerformed(ActionEvent arg0) 
       {
-      if(! Game.setAmount_cards_drop_card(Game.getAmount_cards_drop_card() + 1))
+      if(! Game.setAmount_cards_drop_cards(Game.getAmount_cards_drop_cards() + 1))
         maxWarning();
       else
-        amount_cards_drop_card_jl.setText("  " +Game.getAmount_cards_drop_card()+"  ");
+        amount_cards_drop_card_jl.setText("  " +Game.getAmount_cards_drop_cards()+"  ");
       }
     });
 
@@ -398,7 +414,6 @@ public class GUI_SettingsWin extends GUI_Frame {
       }
     });
 
-
     less_cards_pierce_wall_jb.addActionListener(new ActionListener() 
     {
     @Override
@@ -416,10 +431,10 @@ public class GUI_SettingsWin extends GUI_Frame {
     @Override
     public void actionPerformed(ActionEvent arg0) 
       {
-      if(! Game.setAmount_cards_drop_card(Game.getAmount_cards_drop_card() - 1))
+      if(! Game.setAmount_cards_drop_cards(Game.getAmount_cards_drop_cards() - 1))
         minWarning();
       else
-        amount_cards_drop_card_jl.setText("  " +Game.getAmount_cards_drop_card()+"  ");
+        amount_cards_drop_card_jl.setText("  " +Game.getAmount_cards_drop_cards()+"  ");
       }
     });
 
@@ -484,21 +499,32 @@ public class GUI_SettingsWin extends GUI_Frame {
     }); 
   }
   
-  
   public void maxWarning() {
-   JOptionPane.showMessageDialog(new JFrame(),"Valor máximo alcanzado");  
+    JOptionPane.showMessageDialog(null,
+        "Valor máximo alcanzado",
+        "Advertencia",
+        JOptionPane.WARNING_MESSAGE);
   }  
 
   public void minWarning() {
-    JOptionPane.showMessageDialog(new JFrame(),"Valor mínimo alcanzado");  
+    JOptionPane.showMessageDialog(null,
+        "Valor mínimo alcanzado",
+        "Advertencia",
+        JOptionPane.WARNING_MESSAGE);
   }
   
   public void duplicateWarning() {
-    JOptionPane.showMessageDialog(new JFrame(),"Nombre repetido");  
+    JOptionPane.showMessageDialog(null,
+        "Nombre de jugador repetido",
+        "Advertencia",
+        JOptionPane.WARNING_MESSAGE);
   }
   
   public void emptyWarning() {
-    JOptionPane.showMessageDialog(new JFrame(),"Nombre vacío");  
+    JOptionPane.showMessageDialog(null,
+        "Nombre de jugador vacío",
+        "Advertencia",
+        JOptionPane.WARNING_MESSAGE);
   }
   
   public void setPlayerNames() {
@@ -508,6 +534,12 @@ public class GUI_SettingsWin extends GUI_Frame {
     playerNames_jf.setLocationRelativeTo(null);
     playerNames_jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+    playerNames_jf.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        Game.getInstance().showSettings();
+      }
+    });
+    
     ArrayList<JPanel> panels = new ArrayList<JPanel>();
     ArrayList<JTextField> playerTextfields = new ArrayList<JTextField>();
     JButton play_jb = new JButton ("PLAY!");
@@ -523,7 +555,6 @@ public class GUI_SettingsWin extends GUI_Frame {
       player_name_input_jt.setPreferredSize(new Dimension(80, 33));
       playerNames_jf.add(panels.get(i));
     }
-    
     playerNames_jf.setLayout(new GridLayout(playerTextfields.size()+1,1));
     playerNames_jf.add(play_jb, BorderLayout.SOUTH);
     playerNames_jf.pack();
@@ -533,27 +564,28 @@ public class GUI_SettingsWin extends GUI_Frame {
     @Override
       public void actionPerformed(ActionEvent arg0) 
         {
-        boolean empty = false;
+        // paso los nombres a un array y le saco los espacios
         ArrayList<String> names = new ArrayList<String>();
-        
         for(JTextField aux : playerTextfields) 
-          names.add(aux.getText());
-        
-        names = Game.trimSpaces(names);
-        
-        for(String aux : names) {
+          names.add(aux.getText().trim());
+
+        // reviso que ninguno esté vacio
+        boolean empty = false;
+        for(String aux : names) 
           if(aux.equals(""))
             empty = true;
-        }
         
-        if(!Game.checkDuplicatePlayers(names) && empty == false) {
+        if(empty || Game.checkDuplicatePlayers(names)) {
+          if(empty)
+            emptyWarning();
+          else
+            duplicateWarning();
+        } else {  
+          Game.getInstance().setupGame(names);
           playerNames_jf.dispose();
           dispose();
-          Game.getInstance().createGameObjects(names);
-          }
+        }
       }
     });
-
   }
-  
 }

@@ -7,6 +7,7 @@ import Engine.Game;
 import Utils.Graphicable;
 
 public class Graphics_Console implements Graphicable {
+ 
   
 	@Override
 	public void showIntro() {
@@ -23,7 +24,6 @@ public class Graphics_Console implements Graphicable {
 	      break;
 	    case 3:
 	      Game.getInstance().switchGraphicable();
-	      
 	      break;
 	    }
 	}
@@ -52,8 +52,8 @@ public class Graphics_Console implements Graphicable {
     
   }
 
-  public static int inputInt(String inputString, int min, int max)
-  { //        pasando un minimo y un maximo, devuelve int ingresado en ese rango
+  public static int inputInt(String inputString, int min, int max){
+//  pasando un minimo y un maximo, devuelve int ingresado en ese rango
     boolean isParseable = false;
     boolean inRange = false;
     boolean firstTry = true;
@@ -82,8 +82,8 @@ public class Graphics_Console implements Graphicable {
     }
   return outputInt;
   }
-  public static String inputString(String inputString, ArrayList<String> admittedValues)
-  { 
+
+  public static String inputString(String inputString, ArrayList<String> admittedValues)  { 
   // escanea un string
   // lo compara con elementos de una lista de opciones
   // no puede ser vacío

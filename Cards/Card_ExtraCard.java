@@ -1,15 +1,15 @@
 package Cards;
 
-public 
-class Card_ExtraCard
-extends Card 
+import Engine.Game;
+
+public class Card_ExtraCard extends Card 
 {
-	public Card_ExtraCard() 
-		{
-		}
+  public void effect() {
+    Game.getInstance().getCurrentlyPlaying().pickCard();
+  }
 
   @Override
   public String toString() {
-    return "Card_ExtraCard [rarity=" + rarity + "]";
+    return "Extra Card";
   }
 }

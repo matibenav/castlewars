@@ -10,6 +10,7 @@ public enum Settings {
 	private int min;
 	private String description;
 	
+	
   public int getMax() {
     return max;
   }
