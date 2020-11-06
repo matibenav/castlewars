@@ -13,6 +13,7 @@ public class Card_Attack extends Card
     // takeDamage(int damage, boolean wallOnly)
     if(target != null) {
       target.takeDamage(damage, false);
+      Game.getInstance().getCurrentlyPlaying().discardCard(this);
       Game.getInstance().nextPlayer();
     }
   }

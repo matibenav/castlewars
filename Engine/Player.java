@@ -71,6 +71,11 @@ public class Player {
     return this.cards.remove(position);
   }
   
+  public Card takeCard (Card card) {
+    
+    return this.cards.remove(cards.indexOf(card));
+  }
+  
   public Card exchangeRndCard(Card card) {
     int randomIndex = (int) (Math.random() * this.cards.size());
     Card exchangedCard = this.takeCard(randomIndex);
@@ -79,7 +84,7 @@ public class Player {
   }
   
   public void discardCard(Card card) {
-    Game.getInstance().getDeck().addCard(card);
+    Game.getInstance().getDeck().addCard(takeCard(card));
   }
 
   public void addSoldier(Card_Soldier cs) {
@@ -87,7 +92,7 @@ public class Player {
   }
   
   public void removeSoldier(int position) {
-    discardCard(this.soldiers.remove(position));
+    Game.getInstance().getDeck().addCard(this.soldiers.remove(position));
   }
 
   
@@ -114,20 +119,12 @@ public class Player {
   }
 
   public void takeDamage(int damage, boolean wallOnly) {
-    System.out.println("damage = "+ damage);
-    System.out.println("initial castleHP = "+ castleHP);
-    System.out.println("initial wallHP = "+ wallHP);
-
     int resultingDamage = 0;
     if(wallHP < damage)
       resultingDamage = damage - wallHP;
-    
     setWallHP(wallHP - damage);
     if(!wallOnly && wallHP < damage) 
       setCastleHP(castleHP - resultingDamage);
-    
-    System.out.println("final castleHP = "+ castleHP);
-    System.out.println("final wallHP = "+ wallHP);
   }
 
   public void restoreWallHP(int restoredHP) {
@@ -135,7 +132,8 @@ public class Player {
   }
   
   public void restoreCastleHP(int restoredHP) {
-    setCastleHP(castleHP + restoredHP);}
+    setCastleHP(castleHP + restoredHP);
+  }
   
   // g & s
   

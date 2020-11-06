@@ -24,8 +24,9 @@ public class Card_PierceWall extends Card
     Player target =  Game.getInstance().getGraphics().getTargetPlayer();
  // takeDamage(int damage, boolean wallOnly)
     if(target != null) {
-    target.takeDamage(damage, true);
-    Game.getInstance().nextPlayer();
+      target.takeDamage(damage, true);
+      Game.getInstance().getCurrentlyPlaying().discardCard(this);
+      Game.getInstance().nextPlayer();
     }
   }
   

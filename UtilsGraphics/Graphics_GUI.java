@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import Cards.Card;
+import Cards.Card_ExchangeCard;
 import Cards.Card_Soldier;
 import Engine.Game;
 import Engine.Player;
@@ -51,7 +52,8 @@ public class Graphics_GUI implements Graphicable {
           "",
           JOptionPane.WARNING_MESSAGE);
   }
-  public String getInputFromList(String inputInfo, ArrayList<String> list) {
+  
+  public String selectFromList(String inputInfo, ArrayList<String> list) {
 
     String[] options = new String[list.size()];
     for (int i = 0; i < list.size(); i++) 
@@ -81,7 +83,7 @@ public class Graphics_GUI implements Graphicable {
       if(!p.equals(Game.getInstance().getCurrentlyPlaying()) && !p.hasLost()) 
         players.add(p.getName());
     
-    String playerName = getInputFromList("Select target player", players);
+    String playerName = selectFromList("Select target player", players);
     Player target = Game.getInstance().findPlayer(playerName);
     System.out.println(playerName + " selected");;
     return target;
@@ -91,7 +93,7 @@ public class Graphics_GUI implements Graphicable {
     ArrayList <String> cards = new ArrayList<String>();
     for(Card c : Game.getInstance().getCurrentlyPlaying().getCards()) 
       cards.add(c.toString());
-    String cardName = getInputFromList("Select a card to use it", cards);
+    String cardName = selectFromList("Select a card to use it", cards);
     int cardIndex = cards.indexOf(cardName);
     Card selectedCard = null;
     if(cardIndex != -1)
@@ -99,34 +101,62 @@ public class Graphics_GUI implements Graphicable {
     return selectedCard;
   }
   
-  public Card getTargetCard(Player targetPlayer) {
+  public Card makeDiscard(Player targetPlayer) {
 
     ArrayList <String> cards = new ArrayList<String>();
-    for(Card c : Game.getInstance().findPlayer(targetPlayer.getName()).getCards()) 
+    for(Card c : targetPlayer.getCards()) 
       cards.add(c.toString());
-    String cardName = getInputFromList("Select a card to drop", cards);
+        
+    String cardName = selectFromList("Select a card to make " + targetPlayer.getName() +" discard it", cards);
     int cardIndex = cards.indexOf(cardName);
     Card selectedCard = null;
+
     if(cardIndex != -1)
-      selectedCard = Game.getInstance().findPlayer(targetPlayer.getName()).getCards().get(cardIndex);
+      selectedCard = targetPlayer.getCards().get(cardIndex);
     if (selectedCard == null)
-      return getTargetCard(targetPlayer);
+      return makeDiscard(targetPlayer);
+    else
+      return selectedCard;
+  }
+  
+  public Card exchangeCard(Player targetPlayer, Card_ExchangeCard triggeringCard) {
+
+    ArrayList <String> cards = new ArrayList<String>();
+    for(Card c : targetPlayer.getCards()) {
+      // no incluyo la carta que disparó esta acción
+      // para que no se la pueda dar a cambio de otra carta
+      if(c!=triggeringCard)
+        cards.add(c.toString());
+    }
+    int triggeringCardIndex = targetPlayer.getCards().indexOf(triggeringCard);
+    String cardName = selectFromList("Select a card to give to " + targetPlayer.getName(), cards);
+    int cardIndex = cards.indexOf(cardName);
+    Card selectedCard = null;
+    
+    // para suplir el lugar salteado por la carta que omití
+    // a todas las que estén despues les sumo 1 al indice asi coincide
+    if(cardIndex>=triggeringCardIndex)
+      cardIndex ++;
+    if(cardIndex != -1) 
+      selectedCard = targetPlayer.getCards().get(cardIndex);
+    if (selectedCard == null)
+      return exchangeCard(targetPlayer, triggeringCard);
     else
       return selectedCard;
   }
 
   public Card_Soldier getTargetSoldier(Player targetPlayer) {
-  ArrayList <String> cards = new ArrayList<String>();
-  for(Card_Soldier c : Game.getInstance().findPlayer(targetPlayer.getName()).getSoldiers()) 
-    cards.add(c.toString());
-  String cardName = getInputFromList("Select a soldier to kill", cards);
-  int cardIndex = cards.indexOf(cardName);
-  Card_Soldier selectedCard = null;
-  if(cardIndex != -1)
-    selectedCard = Game.getInstance().findPlayer(targetPlayer.getName()).getSoldiers().get(cardIndex);
-  if (selectedCard == null)
-    return getTargetSoldier(targetPlayer);
-  else
-    return selectedCard;
+    ArrayList <String> cards = new ArrayList<String>();
+    for(Card_Soldier c : targetPlayer.getSoldiers()) 
+      cards.add(c.toString());
+    String cardName = selectFromList("Select a soldier to kill from " + targetPlayer.getName() , cards);
+    int cardIndex = cards.indexOf(cardName);
+    Card_Soldier selectedCard = null;
+    if(cardIndex != -1)
+      selectedCard = targetPlayer.getSoldiers().get(cardIndex);
+    if (selectedCard == null)
+      return getTargetSoldier(targetPlayer);
+    else
+      return selectedCard;
   }
 }

@@ -1,4 +1,4 @@
-package Cards;
+ package Cards;
 
 import Engine.Game;
 import Engine.Player;
@@ -21,12 +21,13 @@ public class Card_HealCastle extends Card
         healPoints = 70;
         break;
     }
-    Game.getInstance().getCurrentlyPlaying().restoreCastleHP(healPoints);    
+    Game.getInstance().getCurrentlyPlaying().restoreCastleHP(healPoints);
+    Game.getInstance().getCurrentlyPlaying().discardCard(this);    
     Game.getInstance().nextPlayer();
   }
   
   @Override
   public String toString() {
-    return "Heal Castle Card" + this.getRarity();
+    return "Heal Castle Card " + this.getRarity();
   }
 }

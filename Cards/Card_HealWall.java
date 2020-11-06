@@ -21,6 +21,7 @@ public class Card_HealWall extends Card
         break;
     }
     Game.getInstance().getCurrentlyPlaying().restoreWallHP(healPoints);
+    Game.getInstance().getCurrentlyPlaying().discardCard(this);
     Game.getInstance().nextPlayer();
   }
 

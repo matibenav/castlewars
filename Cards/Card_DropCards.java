@@ -22,13 +22,24 @@ public class Card_DropCards extends Card
         break;
     }
     Player target =  Game.getInstance().getGraphics().getTargetPlayer();
-    if(target != null) {
-    for(int i = 0; i<amount; i++) {
-      Card card = Game.getInstance().getGraphics().getTargetCard(target);
-      target.discardCard(target.takeCard(target.getCards().indexOf(card)));
+    if(target.getCards().size()>0) {
+      
+      // si tiene menos cartas de las que le voy a hacer descartar
+      // igualo las veces que lo hago descartar a la cantidad de cartas
+      if(target.getCards().size()< amount)
+        amount = target.getCards().size();
+      
+      if(target != null) {
+        for(int i = 0; i<amount; i++) {
+          Card card = Game.getInstance().getGraphics().makeDiscard(target);
+          target.discardCard(card);
+          }
+        Game.getInstance().getCurrentlyPlaying().discardCard(this);
+        Game.getInstance().nextPlayer();
       }
-    Game.getInstance().nextPlayer();
     }
+    else
+      Game.getInstance().getGraphics().showDialog("Selected player does not have any Cards");
   }
   
   @Override

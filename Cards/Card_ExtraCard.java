@@ -6,6 +6,7 @@ public class Card_ExtraCard extends Card
 {
   public void effect() {
     Game.getInstance().getCurrentlyPlaying().pickCard();
+    Game.getInstance().getCurrentlyPlaying().discardCard(this);
   }
 
   @Override

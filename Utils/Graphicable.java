@@ -3,6 +3,7 @@ package Utils;
 import java.util.ArrayList;
 
 import Cards.Card;
+import Cards.Card_ExchangeCard;
 import Cards.Card_Soldier;
 import Engine.Player;
 
@@ -17,19 +18,19 @@ public interface Graphicable {
 	public void loadGame();
 	
   public void saveGame();
-  
 
   public void showDialog(String text);
   
-  public String getInputFromList(String inputInfo, ArrayList<String> list);
+  //usado para elegir jugador o cartas 
+  public String selectFromList(String inputInfo, ArrayList<String> list);
 
   public Player getTargetPlayer();
   
   public Card selectCard();
   
-  public Card getTargetCard(Player targetPlayer) ;
-
-  public Card_Soldier getTargetSoldier(Player targetPlayer) ;
-
+  public Card makeDiscard(Player targetPlayer) ;
   
+  public Card exchangeCard(Player targetPlayer, Card_ExchangeCard triggeringCard) ;
+  
+  public Card_Soldier getTargetSoldier(Player targetPlayer) ;
 }
