@@ -34,7 +34,7 @@ public class Card_DropCards extends Card
           Card card = Game.getInstance().getGraphics().makeDiscard(target);
           target.discardCard(card);
           }
-        Game.getInstance().getCurrentlyPlaying().discardCard(this);
+        Game.getInstance().getActivePlayer().discardCard(this);
         Game.getInstance().nextPlayer();
       }
     }

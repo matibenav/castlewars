@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import Utils.*;
 import UtilsGraphics.*;
-import Cards.*;
 
 public class Game { 
   private String id;
@@ -18,7 +17,7 @@ public class Game {
   private static Game gameInstance;
   private Graphicable graphics;
   private Settings settings;
-  private Player currentlyPlaying;
+  private Player activePlayer;
   
   private static int amount_players = 2;
   private static int starting_Cards = 7;
@@ -66,7 +65,7 @@ public class Game {
       players.add(new Player(name));
   // mezclo el orden de los jugadores
     Collections.shuffle(players);
-    currentlyPlaying = players.get(0);
+    activePlayer = players.get(0);
     
     deck = new Deck();
   // mezclo el mazo y reparto
@@ -76,21 +75,21 @@ public class Game {
     showGame();
   }
 
-  public boolean currentlyPlayingWon() {
+  public boolean activePlayerWon() {
     boolean allElseLost = true;
     for (Player p : players) {
-      if(p != currentlyPlaying && !p.hasLost()) 
+      if(p != activePlayer && !p.hasLost()) 
           allElseLost = false;
     }
     return allElseLost;
   }
   
   public void nextPlayer() {
-    int currentPlayerIndex = players.indexOf(currentlyPlaying);
-    currentlyPlaying = players.get(currentPlayerIndex + 1);
-    if(currentlyPlayingWon())
+    int currentPlayerIndex = players.indexOf(activePlayer);
+    activePlayer = players.get(currentPlayerIndex + 1);
+    if(activePlayerWon())
       showGameOver();
-    if(currentlyPlaying.hasLost())
+    if(activePlayer.hasLost())
       nextPlayer();
     showGame();
     }
@@ -98,14 +97,14 @@ public class Game {
   public static boolean checkDuplicatePlayers(ArrayList<String> playerNames) {
     Set<String> tempSet = new HashSet<String>();
     for (String str : playerNames) {
-        if (!tempSet.add(str)) 
-            return true;
+      if (!tempSet.add(str)) 
+        return true;
     }
     return false;
   }
 
   public void showGameOver() {
-    System.out.println(currentlyPlaying.getName() + " has won! ");
+    System.out.println(activePlayer.getName() + " has won! ");
   }
   
   
@@ -263,8 +262,8 @@ public class Game {
     return graphics;
   }
   
-  public Player getCurrentlyPlaying() {
-    return currentlyPlaying;
+  public Player getActivePlayer() {
+    return activePlayer;
   }
 
   public String getId() {

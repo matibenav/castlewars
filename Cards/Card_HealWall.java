@@ -20,8 +20,8 @@ public class Card_HealWall extends Card
         healPoints = 30;
         break;
     }
-    Game.getInstance().getCurrentlyPlaying().restoreWallHP(healPoints);
-    Game.getInstance().getCurrentlyPlaying().discardCard(this);
+    Game.getInstance().getActivePlayer().restoreWallHP(healPoints);
+    Game.getInstance().getActivePlayer().discardCard(this);
     Game.getInstance().nextPlayer();
   }
 

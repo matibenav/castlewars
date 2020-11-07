@@ -6,7 +6,7 @@ public class Card_Soldier extends Card
 { 
   @Override
   public void effect() {
-    Game.getInstance().getCurrentlyPlaying().addSoldier(this);
+    Game.getInstance().getActivePlayer().addSoldier(this);
   }
 
   @Override

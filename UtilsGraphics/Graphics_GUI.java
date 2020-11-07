@@ -15,12 +15,12 @@ import Utils.Graphicable;
 
 public class Graphics_GUI implements Graphicable {
   
-  private GUI_CW_Win gameFrame;
+  private GUI_GameWin gameFrame;
   
 	@Override
 	public void showGame() {
 	  if(gameFrame == null)
-	    gameFrame = new GUI_CW_Win();
+	    gameFrame = new GUI_GameWin();
 	  else 
 	    gameFrame.paintFrame();
 	}
@@ -80,7 +80,7 @@ public class Graphics_GUI implements Graphicable {
     ArrayList <String> players = new ArrayList<String>();
     
     for(Player p : Game.getInstance().getPlayers()) 
-      if(!p.equals(Game.getInstance().getCurrentlyPlaying()) && !p.hasLost()) 
+      if(!p.equals(Game.getInstance().getActivePlayer()) && !p.hasLost()) 
         players.add(p.getName());
     
     String playerName = selectFromList("Select target player", players);
@@ -91,13 +91,13 @@ public class Graphics_GUI implements Graphicable {
   
   public Card selectCard() {
     ArrayList <String> cards = new ArrayList<String>();
-    for(Card c : Game.getInstance().getCurrentlyPlaying().getCards()) 
+    for(Card c : Game.getInstance().getActivePlayer().getCards()) 
       cards.add(c.toString());
     String cardName = selectFromList("Select a card to use it", cards);
     int cardIndex = cards.indexOf(cardName);
     Card selectedCard = null;
     if(cardIndex != -1)
-      selectedCard = Game.getInstance().getCurrentlyPlaying().getCards().get(cardIndex);
+      selectedCard = Game.getInstance().getActivePlayer().getCards().get(cardIndex);
     return selectedCard;
   }
   

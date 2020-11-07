@@ -10,9 +10,9 @@ public class Card_ExchangeCard extends Card
     Player target =  Game.getInstance().getGraphics().getTargetPlayer();
     if(target != null) {
       if(target.getCards().size()>0) {
-        Card c = Game.getInstance().getGraphics().exchangeCard(Game.getInstance().getCurrentlyPlaying(), this);
+        Card c = Game.getInstance().getGraphics().exchangeCard(Game.getInstance().getActivePlayer(), this);
         target.exchangeRndCard(c);
-        Game.getInstance().getCurrentlyPlaying().discardCard(this);
+        Game.getInstance().getActivePlayer().discardCard(this);
         Game.getInstance().nextPlayer();
       }
       else

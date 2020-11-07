@@ -14,8 +14,8 @@ public class Card_StealCard extends Card
       Random rand = new Random();
       Card c = target.takeCard(rand.nextInt(target.getCards().size()));
       if(target != null) {
-        Game.getInstance().getCurrentlyPlaying().getCards().add(c);
-        Game.getInstance().getCurrentlyPlaying().discardCard(this);
+        Game.getInstance().getActivePlayer().getCards().add(c);
+        Game.getInstance().getActivePlayer().discardCard(this);
         Game.getInstance().nextPlayer();
         }
       }

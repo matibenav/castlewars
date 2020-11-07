@@ -28,7 +28,7 @@ import Engine.Settings;
 public class GUI_SettingsWin extends GUI_Frame {
   
   public GUI_SettingsWin () {
-    super(620,620);
+    super(620,620, "Setup New Game");
     
     JPanel descriptions_jp = new JPanel();
     JPanel amounts_jp = new JPanel();
@@ -37,10 +37,10 @@ public class GUI_SettingsWin extends GUI_Frame {
 
     JLabel image_jl= new JLabel();
     BufferedImage imageBufferedReader = null; 
-      File imageFile = new File
-      ( "D:\\Google Drive\\Universidad\\2018 UP\\"
-      + "2º cuatrimestre\\06 Programación 3\\proyectos\\"
-      + "TrabajoPracticoBallanUnificado\\picSettings.jpg" );       
+    File imageFile = new File
+      ("D:\\Google Drive\\Universidad\\2018 UP\\"
+      +"2º cuatrimestre\\06 Programación 3\\proyectos\\"
+      +"TrabajoPracticoBallanUnificado\\picSettings.jpg");       
     try {
       imageBufferedReader = ImageIO.read(imageFile);
       image_jl = new JLabel(new ImageIcon(imageBufferedReader));}
@@ -72,28 +72,29 @@ public class GUI_SettingsWin extends GUI_Frame {
     less_jp.setLayout(new GridLayout(12,1));
 
     JLabel players_jl = new JLabel("  Players");   
-    players_jl.setToolTipText(Settings.PLAYERS.getDescription());
     JLabel starting_cards_jl = new JLabel("  Starting Cards");   
-    starting_cards_jl.setToolTipText(Settings.STARTING_CARDS.getDescription());
     JLabel cards_attack_jl = new JLabel("  # Cards - Attack");   
-    cards_attack_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_heal_castle_jl = new JLabel("  # Cards - Heal Castle");
-    cards_heal_castle_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_heal_wall_jl = new JLabel("  # Cards - Heal Wall");   
-    cards_heal_wall_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_pierce_wall_jl = new JLabel("  # Cards - Pierce Wall");   
-    cards_pierce_wall_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_drop_card_jl = new JLabel("  # Cards - Drop Card");
-    cards_drop_card_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_steal_card_jl = new JLabel("  # Cards - Steal Card");   
-    players_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_exchange_card_jl = new JLabel("  # Cards - Exchange Card");
-    cards_exchange_card_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_extra_card_jl = new JLabel("  # Cards - Extra Card");
-    cards_extra_card_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_soldier_jl = new JLabel("  # Cards - Soldier");
-    cards_soldier_jl.setToolTipText(Settings.CARDS.getDescription());
     JLabel cards_kill_soldier_jl = new JLabel("  # Cards - Kill Soldier");
+    players_jl.setToolTipText(Settings.PLAYERS.getDescription());
+    starting_cards_jl.setToolTipText(Settings.STARTING_CARDS.getDescription());
+    cards_attack_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_heal_castle_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_heal_wall_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_pierce_wall_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_drop_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_drop_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_steal_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_exchange_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_extra_card_jl.setToolTipText(Settings.CARDS.getDescription());
+    cards_soldier_jl.setToolTipText(Settings.CARDS.getDescription());
     cards_kill_soldier_jl.setToolTipText(Settings.CARDS.getDescription());
     
     JLabel amount_players_jl = new JLabel("  " + Game.getAmount_players() + "  " , JLabel.CENTER);   
@@ -207,6 +208,14 @@ public class GUI_SettingsWin extends GUI_Frame {
         dispose();
       }
     });
+
+    class moreButton implements ActionListener{  
+      public void actionPerformed(ActionEvent e){  
+      //  tf.setText("Welcome to Javatpoint.");  
+      
+        
+      }  
+    }
 
     
     more_players_jb.addActionListener(new ActionListener() 
