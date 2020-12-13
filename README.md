@@ -1,6 +1,8 @@
 # Castlewars
 
-Juego
+
+Juego 
+		(singleton)
     id 
     players[]
     turnOrder
@@ -27,6 +29,11 @@ Interface: Targeteable
     whenTarget
 
 
+	interface
+		gui/console
+			paint
+			show settings
+			other menus
 
 Card
     attr: rarity (70 / 20 / 10)
